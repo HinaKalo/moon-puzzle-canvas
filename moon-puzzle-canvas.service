@@ -1,0 +1,15 @@
+[Unit]
+Description=Moon Excalidraw puzzle canvas
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+NotifyAccess=all
+ExecStart=/usr/bin/podman run --rm --replace --name moon-puzzle-canvas --sdnotify=conmon --read-only --cap-drop=ALL --security-opt=no-new-privileges --memory=512m --pids-limit=128 --publish=127.0.0.1:18847:18847 --volume=/var/lib/moon-puzzle-canvas:/data --env-file=/etc/moon-puzzle-canvas/sso-client.env localhost/moon-puzzle-canvas:1.1.0
+ExecStop=/usr/bin/podman stop --ignore --time=10 moon-puzzle-canvas
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
